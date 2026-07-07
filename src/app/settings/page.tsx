@@ -264,6 +264,10 @@ export default function SettingsPage() {
             <p className="text-[16px] text-yellow-700">
               💡 택시 탑승 시 아래 가족에게 자동으로 알림이 갑니다
             </p>
+            <p className="text-[14px] mt-2 text-yellow-700">
+              탑승·도착 알림을 보내기 위해서만 연락처를 이 휴대폰에 저장하며,
+              아래 삭제 버튼으로 언제든 지울 수 있습니다
+            </p>
           </div>
 
           {family.map((f) => (
