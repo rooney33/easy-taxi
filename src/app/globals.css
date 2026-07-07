@@ -35,6 +35,10 @@ body {
   font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
   font-size: 20px;
   -webkit-font-smoothing: antialiased;
+}
+
+/* 버튼만 선택 방지 — 주소·전화번호 같은 텍스트는 복사할 수 있어야 한다 */
+button {
   user-select: none;
   -webkit-user-select: none;
 }

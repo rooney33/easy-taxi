@@ -11,6 +11,7 @@ export default function CallPage() {
   const router = useRouter();
   const [ride, setRide] = useState<Ride | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [actionFailed, setActionFailed] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const creating = useRef(false);
 
@@ -47,7 +48,10 @@ export default function CallPage() {
         sessionStorage.setItem("ride-id", created.id);
         setRide(created);
       })
-      .catch(() => setError("network"));
+      .catch(() => {
+        creating.current = false; // 재진입 시 다시 시도할 수 있게 잠금 해제
+        setError("network");
+      });
   }, []);
 
   // 2) 배차 상태 폴링
@@ -110,19 +114,21 @@ export default function CallPage() {
     router.push("/");
   }
 
+  // 서버 상태 변경이 성공했을 때만 다음 화면으로 — 실패 시 화면과 서버가 어긋나지 않게
   async function handleStartRide() {
     const id = sessionStorage.getItem("ride-id");
     if (!id) return;
     try {
-      await fetch(`/api/rides/${id}`, {
+      const res = await fetch(`/api/rides/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: "riding" }),
       });
+      if (!res.ok) throw new Error();
+      router.push("/riding");
     } catch {
-      // 통신 실패 시에도 탑승 화면으로 진행 (상태는 폴링으로 동기화)
+      setActionFailed(true);
     }
-    router.push("/riding");
   }
 
   function handleGoHome() {
@@ -248,6 +254,12 @@ export default function CallPage() {
               택시가 올 때까지<br />안전한 곳에서 기다려주세요
             </p>
           </div>
+
+          {actionFailed && (
+            <p className="text-[22px] font-bold text-center mb-3" style={{ color: "var(--danger)" }}>
+              연결이 불안정해요<br />한 번 더 눌러주세요
+            </p>
+          )}
 
           <button
             onClick={handleStartRide}

@@ -32,6 +32,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -48,7 +49,7 @@ next-env.d.ts
 /data
 
 # 사업 문서 전체 (제안서·계획서·개발일지·이력서 자료)
-/docs/
+/docs/private/
 
 # AI 도구(Claude) 설정·지침 파일
 /.claude/

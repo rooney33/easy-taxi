@@ -71,10 +71,21 @@ const DEFAULT_FAMILY: FamilyContact[] = [
   { id: "2", name: "딸", phone: "010-9876-5432", relation: "딸" },
 ];
 
+// localStorage 값이 손상되어 있어도 화면이 죽지 않도록 기본값으로 복구
+function load<T>(key: string, fallback: T): T {
+  if (typeof window === "undefined") return fallback;
+  const saved = localStorage.getItem(key);
+  if (!saved) return fallback;
+  try {
+    return JSON.parse(saved) as T;
+  } catch {
+    localStorage.removeItem(key);
+    return fallback;
+  }
+}
+
 export function getDestinations(): Destination[] {
-  if (typeof window === "undefined") return DEFAULT_DESTINATIONS;
-  const saved = localStorage.getItem("family-taxi-destinations");
-  return saved ? JSON.parse(saved) : DEFAULT_DESTINATIONS;
+  return load("family-taxi-destinations", DEFAULT_DESTINATIONS);
 }
 
 export function saveDestinations(destinations: Destination[]) {
@@ -82,9 +93,7 @@ export function saveDestinations(destinations: Destination[]) {
 }
 
 export function getFamilyContacts(): FamilyContact[] {
-  if (typeof window === "undefined") return DEFAULT_FAMILY;
-  const saved = localStorage.getItem("family-taxi-family");
-  return saved ? JSON.parse(saved) : DEFAULT_FAMILY;
+  return load("family-taxi-family", DEFAULT_FAMILY);
 }
 
 export function saveFamilyContacts(contacts: FamilyContact[]) {
@@ -92,9 +101,7 @@ export function saveFamilyContacts(contacts: FamilyContact[]) {
 }
 
 export function getProfile(): Profile {
-  if (typeof window === "undefined") return { name: "", phone: "" };
-  const saved = localStorage.getItem("family-taxi-profile");
-  return saved ? JSON.parse(saved) : { name: "", phone: "" };
+  return load("family-taxi-profile", { name: "", phone: "" });
 }
 
 export function saveProfile(profile: Profile) {

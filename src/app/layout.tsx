@@ -7,11 +7,10 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
 };
 
+// 어르신이 손가락으로 화면을 확대할 수 있어야 하므로 확대를 막지 않는다
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
   themeColor: "#FF6B00",
 };
 

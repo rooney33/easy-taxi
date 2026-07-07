@@ -12,6 +12,7 @@ export default function RidingPage() {
   const [ride, setRide] = useState<Ride | null>(null);
   const [familyContacts, setFamilyContacts] = useState<FamilyContact[]>([]);
   const [notified, setNotified] = useState(false);
+  const [actionFailed, setActionFailed] = useState(false);
 
   useEffect(() => {
     setFamilyContacts(getFamilyContacts());
@@ -39,20 +40,22 @@ export default function RidingPage() {
     return () => clearTimeout(timer);
   }, [ride]);
 
+  // 서버가 도착 처리를 받아준 뒤에만 도착 화면으로 전환
   async function handleArrived() {
     const id = sessionStorage.getItem("ride-id");
-    if (id) {
-      try {
-        await fetch(`/api/rides/${id}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ status: "arrived" }),
-        });
-      } catch {
-        // 통신 실패해도 도착 화면은 보여준다
-      }
+    if (!id) return;
+    try {
+      const res = await fetch(`/api/rides/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "arrived" }),
+      });
+      if (!res.ok) throw new Error();
+      setActionFailed(false);
+      setRide((prev) => (prev ? { ...prev, status: "arrived" } : prev));
+    } catch {
+      setActionFailed(true);
     }
-    setRide((prev) => (prev ? { ...prev, status: "arrived" } : prev));
   }
 
   function handleGoHome() {
@@ -130,9 +133,15 @@ export default function RidingPage() {
             )}
           </div>
 
+          {actionFailed && (
+            <p className="text-[22px] font-bold text-center mt-auto mb-3" style={{ color: "var(--danger)" }}>
+              연결이 불안정해요<br />한 번 더 눌러주세요
+            </p>
+          )}
+
           <button
             onClick={handleArrived}
-            className="w-full py-6 rounded-2xl text-white text-[28px] font-bold shadow-lg mt-auto"
+            className={`w-full py-6 rounded-2xl text-white text-[28px] font-bold shadow-lg ${actionFailed ? "" : "mt-auto"}`}
             style={{ backgroundColor: "var(--success)" }}
           >
             도착했어요!
