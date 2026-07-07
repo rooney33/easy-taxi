@@ -20,21 +20,40 @@ Next.js (App Router) · React · Tailwind CSS · PostgreSQL (`pg`)
 
 ## 실행
 
+### 1. 백엔드(DB) 준비 — PostgreSQL
+
+로컬(Homebrew) 기준:
+
+```bash
+brew install postgresql@17          # 최초 1회
+brew services start postgresql@17   # DB 서버 시작
+createdb easy_taxi                  # DB 생성 (최초 1회)
+```
+
+클라우드(Supabase/Neon)를 쓰는 경우 프로젝트 생성 후 접속 URL만 받아오면 된다.
+**rides 테이블은 서버가 첫 요청을 받을 때 자동 생성**되므로 별도 마이그레이션은 없다.
+
+### 2. 환경변수
+
+`.env.example`을 `.env.local`로 복사한 뒤 값을 채운다:
+
+```
+DATABASE_URL=postgresql://localhost:5432/easy_taxi   # 또는 Supabase/Neon URL
+OPERATOR_KEY=원하는-비밀키    # 미설정 시 운영자 기능 전체 잠김
+```
+
+### 3. 앱 실행
+
 ```bash
 npm install
 npm run dev   # http://localhost:3000
 ```
 
-`.env.local`:
+### 4. 운영자 데스크 접속
 
-`.env.example`을 `.env.local`로 복사한 뒤 값을 채운다:
-
-```
-DATABASE_URL=postgres://...   # 로컬 또는 Supabase/Neon
-OPERATOR_KEY=...              # 운영자 인증 키 — 미설정 시 운영자 기능 전체 잠김
-```
-
-rides 테이블은 첫 요청 시 자동 생성된다.
+1. 브라우저에서 `http://localhost:3000/operator` 접속
+2. `.env.local`의 `OPERATOR_KEY` 값을 입력하면 배차 대시보드가 열린다
+3. 어르신 화면(`/`)에서 호출을 만들면 목록에 나타나고, 차량번호·기사명·도착 예정 시간을 입력해 배차한다
 
 ## 현재 구현 범위 (2026-07)
 

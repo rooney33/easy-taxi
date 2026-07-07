@@ -53,6 +53,9 @@ export default function PickupPage() {
           <p className="text-[18px]" style={{ color: "var(--gray)" }}>
             잠시만 기다려주세요...
           </p>
+          <p className="text-[15px] mt-4 text-center" style={{ color: "var(--gray)" }}>
+            현재 위치는 택시 출발지를 안내하기 위해서만 사용됩니다
+          </p>
         </div>
       ) : (
         <>
