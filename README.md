@@ -49,7 +49,19 @@ npm install
 npm run dev   # http://localhost:3000
 ```
 
-### 4. 운영자 데스크 접속
+### 4. 모바일(폰)에서 확인
+
+GPS는 HTTPS에서만 동작하므로 폰 테스트는 전용 스크립트를 쓴다:
+
+```bash
+npm run dev:mobile   # HTTPS + 네트워크 공개 모드
+```
+
+1. 폰을 Mac과 **같은 Wi-Fi**에 연결
+2. 폰 브라우저에서 `https://<Mac의 IP>:3000` 접속 (IP 확인: `ipconfig getifaddr en0`)
+3. "안전하지 않음" 경고가 뜨면 **고급 → 계속 이동** (자체 서명 인증서라 정상)
+
+### 5. 운영자 데스크 접속
 
 1. 브라우저에서 `http://localhost:3000/operator` 접속
 2. `.env.local`의 `OPERATOR_KEY` 값을 입력하면 배차 대시보드가 열린다
@@ -65,7 +77,7 @@ npm run dev   # http://localhost:3000
 **프로토타입/더미 (실제 연동 전):**
 
 - `/pickup` 출발지 확인 — 고정 주소 + CSS 목업 건물. 실제 GPS·카카오맵 로드뷰 연동은
-  [`docs/프로젝트계획서_출발지AI.md`](docs/프로젝트계획서_출발지AI.md) 설계대로 재작성 예정 (M1~M2)
+  [`docs/프로젝트계획서_출발지AI.md`](docs/프로젝트계획서_출발지AI.md) 설계대로 재작성 예정
 - `/search` 목적지 검색 — 실제 장소 검색 API 미연동
 - `/riding` 가족 알림 — 화면 연출만 있음, 실제 SMS/카카오톡 전송 없음
 - `/driver` 기사 화면 — 컨셉 데모 (하드코딩, 배차 DB 미연결)
@@ -74,6 +86,5 @@ npm run dev   # http://localhost:3000
 
 ## 문서
 
-- [`docs/제안서.md`](docs/제안서.md) — 카카오 T 이지모드 사업 제안서
-- [`docs/프로젝트계획서_출발지AI.md`](docs/프로젝트계획서_출발지AI.md) — 출발지 AI 기술 설계·리스크·마일스톤
+- [`docs/프로젝트계획서_출발지AI.md`](docs/프로젝트계획서_출발지AI.md) — 출발지 AI 기능 설계·정책 체크리스트·베타 설문 계획
 - [`docs/아키텍처_가이드.md`](docs/아키텍처_가이드.md) — 코드 구조
